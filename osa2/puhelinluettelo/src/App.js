@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import Person from './components/Person'
 import Form from './components/Form'
 import Filter from './components/FIlter'
+import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from 'react-dom'
 
 const App = () => {
   const [ persons, setPersons] = useState([])
@@ -10,6 +12,16 @@ const App = () => {
   const [showAll, setShowAll] = useState(false)
   const [search, setSearch] =useState('')
 
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
+  }, [])
+  console.log('render', persons.length, 'persons')
   const handleNameChange = (event) => {
     setNewName(event.target.value)
 
