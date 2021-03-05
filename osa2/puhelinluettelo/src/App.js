@@ -3,7 +3,8 @@ import axios from 'axios'
 import Person from './components/Person'
 import Form from './components/Form'
 import Filter from './components/FIlter'
-import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from 'react-dom'
+import personService from './services/persons'
+
 
 const App = () => {
   const [ persons, setPersons] = useState([])
@@ -13,14 +14,14 @@ const App = () => {
   const [search, setSearch] =useState('')
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
         console.log('promise fulfilled')
         setPersons(response.data)
       })
   }, [])
+
   console.log('render', persons.length, 'persons')
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -52,10 +53,15 @@ const App = () => {
         number: newNumber,
         id: persons.length +1,
       }
-      console.log(newName)
-      setPersons(persons.concat(personObject))
-      setNewNumber('')
-      setNewName('')
+      
+      personService
+        .create(personObject)
+        .then(response => {
+          console.log(newName)
+          setPersons(persons.concat(personObject))
+          setNewNumber('')
+          setNewName('')
+        })
     }
   }
 
