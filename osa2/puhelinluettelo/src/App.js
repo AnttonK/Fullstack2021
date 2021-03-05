@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Person from './components/Person'
 import Form from './components/Form'
-import Filter from './components/FIlter'
+import Filter from './components/Filter'
 import personService from './services/persons'
 
 
@@ -37,6 +37,21 @@ const App = () => {
     console.log(search)
     setSearch(event.target.value)
   }
+
+const handleDelete = (id, name) => {
+  console.log(id)
+  console.log(name)
+  const accepted = window.confirm(`Delete ${name}?`)
+  if (accepted) {
+    personService
+      .remove(id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id));
+      })
+
+  }
+  
+}
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -88,7 +103,7 @@ const App = () => {
         
       <h2>Numbers</h2>
       <div>
-          <ul>{personsToShow.map((person,i) => <Person key={i} person={person} />)}</ul>
+          <ul>{personsToShow.map((person,i) => <Person key={i} person={person} handleDelete={handleDelete} />)}</ul>
         </div>
     </div>
   )
